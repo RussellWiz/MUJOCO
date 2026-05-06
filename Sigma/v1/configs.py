@@ -32,6 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--xml", default=str(DEFAULT_XML), help="Path to the MuJoCo PSM XML")
     parser.add_argument("--sdk-bin", default=None, help="Directory containing dhd64.dll and drd64.dll")
     parser.add_argument("--no-drd-init", action="store_true", help="Skip DRD auto-init and only use DHD open/read calls")
+    parser.add_argument("--debug-sdk", action="store_true", help="Print Force Dimension SDK open/runtime status for hand-feel debugging")
     parser.add_argument("--orientation-mode", choices=("none", "roll", "rpy", "full", "hybrid", "split"), default="none", help="How sigma.7 orientation drives the PSM")
     parser.add_argument("--track-body", default="tool_tip", help="MuJoCo body used as the Cartesian control point")
     parser.add_argument("--orientation-body", default=None, help="MuJoCo body used as the orientation control point; defaults to --track-body")

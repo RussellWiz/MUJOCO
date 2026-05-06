@@ -115,6 +115,8 @@ class ForceDimensionSDK:
         self._opened = False
         self._use_drd_init = use_drd_init
         self._force_output_enabled = False
+        self._opened_via_drd = False
+        self._gravity_comp_enabled = False
         self.device_id = self.DEFAULT_DEVICE_ID
 
     def _configure_signatures(self) -> None:
@@ -186,6 +188,8 @@ class ForceDimensionSDK:
         self.drd.drdClose.restype = c_int
         self.drd.drdIsInitialized.argtypes = [c_byte]
         self.drd.drdIsInitialized.restype = c_bool
+        self.drd.drdIsRunning.argtypes = [c_byte]
+        self.drd.drdIsRunning.restype = c_bool
         self.drd.drdAutoInit.argtypes = [c_byte]
         self.drd.drdAutoInit.restype = c_int
         self.drd.drdStart.argtypes = [c_byte]
@@ -235,15 +239,6 @@ class ForceDimensionSDK:
             self.device_id = ctypes.c_byte(device_id)
 
     def _enable_optional_device_features(self) -> None:
-        gravity_result = self.dhd.dhdSetGravityCompensation(self.DHD_ON, self.device_id)
-        if gravity_result < 0:
-            print(f"Warning: gravity compensation unavailable: {self.error()}")
-
-        if self.dhd.dhdHasActiveGripper(self.device_id):
-            emulate_result = self.dhd.dhdEmulateButton(self.DHD_ON, self.device_id)
-            if emulate_result < 0:
-                print(f"Warning: button emulation unavailable: {self.error()}")
-
         force_result = self.dhd.dhdEnableForce(self.DHD_ON, self.device_id)
         if force_result < 0:
             print(f"Warning: force output unavailable; continuing read-only: {self.error()}")
@@ -251,10 +246,23 @@ class ForceDimensionSDK:
         else:
             self._force_output_enabled = True
 
+        gravity_result = self.dhd.dhdSetGravityCompensation(self.DHD_ON, self.device_id)
+        if gravity_result < 0:
+            print(f"Warning: gravity compensation unavailable: {self.error()}")
+            self._gravity_comp_enabled = False
+        else:
+            self._gravity_comp_enabled = True
+
+        if self.dhd.dhdHasActiveGripper(self.device_id):
+            emulate_result = self.dhd.dhdEmulateButton(self.DHD_ON, self.device_id)
+            if emulate_result < 0:
+                print(f"Warning: button emulation unavailable: {self.error()}")
+
     def open(self) -> None:
         if self._use_drd_init:
             self._check(self.drd.drdOpen(), "drdOpen")
             self._opened = True
+            self._opened_via_drd = True
             self._set_device_id(self.drd.drdGetDeviceID())
             if not self.drd.drdIsInitialized(self.device_id):
                 self._check(self.drd.drdAutoInit(self.device_id), "drdAutoInit")
@@ -266,9 +274,11 @@ class ForceDimensionSDK:
         else:
             self._check(self.dhd.dhdOpen(), "dhdOpen")
             self._opened = True
+            self._opened_via_drd = False
             self._set_device_id(self.dhd.dhdGetDeviceID())
 
         self._enable_optional_device_features()
+        self.set_zero_force()
 
     def close(self) -> None:
         if not self._opened:
@@ -283,6 +293,8 @@ class ForceDimensionSDK:
         finally:
             self._opened = False
             self._force_output_enabled = False
+            self._gravity_comp_enabled = False
+            self._opened_via_drd = False
 
     def __enter__(self) -> "ForceDimensionSDK":
         self.open()
@@ -424,3 +436,28 @@ class ForceDimensionSDK:
         if dhd_freq > 0.0:
             return dhd_freq
         return float(self.drd.drdGetCtrlFreq(self.device_id))
+
+    def debug_status(self) -> dict[str, object]:
+        drd_initialized = False
+        drd_running = False
+        if self._opened:
+            try:
+                drd_initialized = bool(self.drd.drdIsInitialized(self.device_id))
+            except Exception:
+                drd_initialized = False
+            try:
+                drd_running = bool(self.drd.drdIsRunning(self.device_id))
+            except Exception:
+                drd_running = False
+
+        return {
+            "opened": self._opened,
+            "opened_via_drd": self._opened_via_drd,
+            "use_drd_init": self._use_drd_init,
+            "device_id": int(self.device_id.value),
+            "force_output_enabled": self._force_output_enabled,
+            "gravity_comp_enabled": self._gravity_comp_enabled,
+            "drd_initialized": drd_initialized,
+            "drd_running": drd_running,
+            "com_freq_khz": self.com_freq() if self._opened else 0.0,
+        }

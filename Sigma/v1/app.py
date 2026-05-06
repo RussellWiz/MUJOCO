@@ -169,6 +169,7 @@ class TeleopApp:
         self.calibration = None
         self.motion = None
         self.jaw = None
+        self._sdk_debug_reads_remaining = 3
 
     def _load_mujoco(self):
         try:
@@ -184,6 +185,7 @@ class TeleopApp:
 
     def initialize_teleop_state(self) -> None:
         master_state = self.master.read_state()
+        self._maybe_print_sdk_status("after-first-read", master_state)
         self.calibration = make_calibration(master_state, self.robot)
         target_rotation_home = body_rotation(self.robot.data, self.robot.orientation_body_id).copy()
         self.motion = MotionController(self.args, self.robot, self.calibration, target_rotation_home)
@@ -199,6 +201,32 @@ class TeleopApp:
         self.motion.reset(self.calibration, target_rotation_home)
         self.jaw.reset(self.calibration)
         print("\nRecalibrated neutral pose.")
+
+    def _maybe_print_sdk_status(self, stage: str, master_state=None) -> None:
+        if not self.args.debug_sdk:
+            return
+        status = self.master.debug_status()
+        line = (
+            f"[sdk:{stage}] "
+            f"opened={status['opened']} "
+            f"via_drd={status['opened_via_drd']} "
+            f"use_drd_init={status['use_drd_init']} "
+            f"dev={status['device_id']} "
+            f"force={status['force_output_enabled']} "
+            f"gravity={status['gravity_comp_enabled']} "
+            f"drd_init={status['drd_initialized']} "
+            f"drd_running={status['drd_running']} "
+            f"freq={status['com_freq_khz']:.3f}kHz"
+        )
+        if master_state is not None:
+            pos = master_state.position
+            vel = master_state.linear_velocity
+            line += (
+                f" pos=({pos[0]:+.4f},{pos[1]:+.4f},{pos[2]:+.4f})"
+                f" vel=({vel[0]:+.4f},{vel[1]:+.4f},{vel[2]:+.4f})"
+                f" grip={master_state.gripper_deg:+.3f}deg"
+            )
+        print(line)
 
     def print_banner(self) -> None:
         print(f"Loaded MuJoCo XML: {self.xml_path}")
@@ -219,6 +247,7 @@ class TeleopApp:
         try:
             print("Opening sigma.7...")
             self.master.open()
+            self._maybe_print_sdk_status("after-open")
             self.initialize_teleop_state()
             self.print_banner()
             last_print = time.perf_counter()
@@ -233,7 +262,9 @@ class TeleopApp:
                         self.recalibrate()
 
                     master_state = self.master.read_state()
-                    self.master.set_zero_force()
+                    if self._sdk_debug_reads_remaining > 0:
+                        self._maybe_print_sdk_status("loop-read", master_state)
+                        self._sdk_debug_reads_remaining -= 1
                     orientation_error, insertion_lag, measured_arm_qpos, target_position_filt = self.motion.update_arm(master_state)
                     jaw_target = self.jaw.update(master_state)
 
