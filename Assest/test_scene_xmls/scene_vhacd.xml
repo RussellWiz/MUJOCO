@@ -1,0 +1,101 @@
+<mujoco model="panda scene with VHACD torus">
+  <include file="panda.xml"/>
+
+  <statistic center="0.3 0 0.4" extent="1"/>
+  <option iterations="80" noslip_iterations="40"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="torus_mat" rgba="0.8 0.45 0.15 1" specular="0.5" shininess="0.5"/>
+
+    <!--
+      torus 原始 OBJ 在 scale=1 时：
+        主半径 R ≈ 1.02,  管半径 r ≈ 0.25,  外径 ≈ 2.54
+        厚度(Y) ≈ 0.5
+      OBJ 的圆环平面在 XZ，管截面沿 Y。
+      scale=0.07 → 外径 ≈ 17.8cm, 管径 ≈ 3.5cm, 厚度 ≈ 3.5cm
+    -->
+    <mesh name="torus_visual" file="torus_visual.obj" scale="0.07 0.07 0.07"/>
+
+    <!-- 8 个 VHACD 凸包（碰撞用），同 scale -->
+    <mesh name="torus_ch0" file="torus_vhacd_convex_0.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch1" file="torus_vhacd_convex_1.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch2" file="torus_vhacd_convex_2.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch3" file="torus_vhacd_convex_3.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch4" file="torus_vhacd_convex_4.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch5" file="torus_vhacd_convex_5.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch6" file="torus_vhacd_convex_6.obj" scale="0.07 0.07 0.07"/>
+    <mesh name="torus_ch7" file="torus_vhacd_convex_7.obj" scale="0.07 0.07 0.07"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"
+          solref="0.001 1" solimp="0.99 0.999 0.001" priority="1"/>
+
+    <!--
+      圆环 body：
+        OBJ 的 Y 轴 = 圆环厚度方向。需要绕 X 旋转 90° 使圆环平放（孔朝上）。
+        quat="0.707 0.707 0 0" = 绕 X 轴旋转 90°。
+        pos z = 0.25: 从高处掉落。
+    -->
+    <body name="torus" pos="0.6 0 0.25" quat="0.707 0.707 0 0">
+      <freejoint/>
+
+      <!-- 视觉 geom：完整 torus mesh -->
+      <geom name="torus_visual" type="mesh" mesh="torus_visual" material="torus_mat"
+            contype="0" conaffinity="0" group="2" density="0"/>
+
+      <!--
+        碰撞 geom：8 个 VHACD 凸包，空心碰撞。
+        相比 capsule 版本，VHACD 网格更容易出现点接触/滚动，因此：
+          - 提高 friction / condim，增强抗滑与抗滚
+          - 减小 margin，避免未接触就被“顶开”
+          - 降低总质量，方便夹爪稳定提起
+          - 用更软一点的 solref/solimp，避免接触过硬弹开
+      -->
+      <geom name="torus_col0" type="mesh" mesh="torus_ch0" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col1" type="mesh" mesh="torus_ch1" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col2" type="mesh" mesh="torus_ch2" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col3" type="mesh" mesh="torus_ch3" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col4" type="mesh" mesh="torus_ch4" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col5" type="mesh" mesh="torus_ch5" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col6" type="mesh" mesh="torus_ch6" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+      <geom name="torus_col7" type="mesh" mesh="torus_ch7" group="3"
+            contype="1" conaffinity="1" condim="6" friction="12 5 0.8"
+            solref="0.02 1" solimp="0.92 0.97 0.001 0.5 2"
+            margin="0.0003" mass="0.0015"/>
+    </body>
+  </worldbody>
+
+</mujoco>

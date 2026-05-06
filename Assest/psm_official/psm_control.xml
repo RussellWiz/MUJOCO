@@ -1,0 +1,133 @@
+<mujoco model="dvrk_psm_official_control">
+  <compiler angle="radian" meshdir="." autolimits="true"/>
+  <option timestep="0.002" iterations="80" integrator="implicitfast"/>
+  <statistic center="-0.25 0 0.5" extent="1.2"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <global azimuth="135" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.45 0.65" rgb2="0 0 0" width="512" height="3072"/>
+    <material name="psm_mat" rgba="0.8 0.8 0.78 1" specular="0.25" shininess="0.4"/>
+    <mesh name="mesh_0_psm_base" file="converted_meshes/meshes/Classic/PSM/psm_base.obj"/>
+    <mesh name="mesh_1_outer_yaw" file="converted_meshes/meshes/Classic/PSM/outer_yaw.obj"/>
+    <mesh name="mesh_2_outer_pitch_back" file="converted_meshes/meshes/Classic/PSM/outer_pitch_back.obj"/>
+    <mesh name="mesh_3_outer_pitch_front" file="converted_meshes/meshes/Classic/PSM/outer_pitch_front.obj"/>
+    <mesh name="mesh_4_outer_pitch_bottom" file="converted_meshes/meshes/Classic/PSM/outer_pitch_bottom.obj"/>
+    <mesh name="mesh_5_outer_pitch_top" file="converted_meshes/meshes/Classic/PSM/outer_pitch_top.obj"/>
+    <mesh name="mesh_6_outer_insertion" file="converted_meshes/meshes/Classic/PSM/outer_insertion.obj"/>
+    <mesh name="mesh_7_tool_main" file="converted_meshes/meshes/Classic/PSM/tool_main.obj"/>
+    <mesh name="mesh_8_tool_wrist_link" file="converted_meshes/meshes/Classic/PSM/tool_wrist_link.obj"/>
+    <mesh name="mesh_9_tool_wrist_shaft_link" file="converted_meshes/meshes/Classic/PSM/tool_wrist_shaft_link.obj"/>
+    <mesh name="mesh_10_tool_wrist_sca_link" file="converted_meshes/meshes/Classic/PSM/tool_wrist_sca_link.obj"/>
+    <mesh name="mesh_11_tool_wrist_sca_shaft_link" file="converted_meshes/meshes/Classic/PSM/tool_wrist_sca_shaft_link.obj"/>
+    <mesh name="mesh_12_tool_wrist_sca_link_2" file="converted_meshes/meshes/Classic/PSM/tool_wrist_sca_link_2.obj"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" type="plane" size="1 1 0.01" rgba="0.25 0.3 0.35 1"/>
+    <body name="psm_base" pos="-0.25 0.0 0.5" quat="6.12323399574e-17 0 0 1">
+      <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name="psm_base_visual_0" type="mesh" mesh="mesh_0_psm_base" material="psm_mat" pos="0.039 -0.40788 -0.07879" quat="-2.59734346696e-06 -2.59735300756e-06 0.707108079855 0.707105482506" contype="0" conaffinity="0" group="2" density="0"/>
+      <body name="outer_yaw" pos="0.0 0.0 0.0" quat="0.499998163397 0.500001836603 -0.499999999997 0.499999999997">
+        <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+        <joint name="yaw" type="hinge" axis="0 0 1" range="-1.5707 1.5707" damping="2" armature="0.02" frictionloss="0.01"/>
+        <geom name="outer_yaw_visual_0" type="mesh" mesh="mesh_1_outer_yaw" material="psm_mat" pos="0.0125 0 0.5265" quat="-2.59734346696e-06 0.707105482506 0.707108079855 -2.59735300756e-06" contype="0" conaffinity="0" group="2" density="0"/>
+        <body name="outer_pitch" pos="0 0 0" quat="0.499998163397 -0.499999999997 -0.499999999997 -0.500001836603">
+          <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+          <joint name="pitch" type="hinge" axis="0 0 1" range="-0.7854 0.7854" damping="2" armature="0.02" frictionloss="0.01"/>
+          <body name="tool_main" pos="0 0.4318 0" quat="0.707105482511 0.707108079859 0 0">
+            <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+            <joint name="insertion" type="slide" axis="0 0 1" range="0 0.240" damping="2" armature="0.02" frictionloss="0.01"/>
+            <geom name="tool_main_visual_0" type="mesh" mesh="mesh_7_tool_main" material="psm_mat" pos="0 0 0.041" quat="0.707105482511 0 0 0.707108079859" contype="0" conaffinity="0" group="2" density="0"/>
+            <body name="tool_wrist" pos="0 0 0.4162" quat="1 0 0 0">
+              <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+              <joint name="roll" type="hinge" axis="0 0 1" range="-2.2689 2.2689" damping="2" armature="0.02" frictionloss="0.01"/>
+              <geom name="tool_wrist_visual_0" type="mesh" mesh="mesh_8_tool_wrist_link" material="psm_mat" pos="0 0 -0.0091" quat="0.707105482511 0 0 0.707108079859" contype="0" conaffinity="0" group="2" density="0"/>
+              <body name="wrist_shaft" pos="0 0 0.0" quat="1 0 0 0">
+                <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                <geom name="wrist_shaft_visual_0" type="mesh" mesh="mesh_9_tool_wrist_shaft_link" material="psm_mat" pos="0 0.00401 0" quat="0.707105482511 0.707108079859 0 0" contype="0" conaffinity="0" group="2" density="0"/>
+                <body name="wrist_sca" pos="0 0 0" quat="0.499998163397 -0.499999999997 -0.499999999997 -0.500001836603">
+                  <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                  <joint name="wrist_pitch" type="hinge" axis="0 0 1" range="-1.5707 1.5707" damping="2" armature="0.02" frictionloss="0.01"/>
+                  <geom name="wrist_sca_visual_0" type="mesh" mesh="mesh_10_tool_wrist_sca_link" material="psm_mat" pos="0.0051 0.0032 0" quat="-2.59734346696e-06 -2.59735300756e-06 0.707105482506 -0.707108079855" contype="0" conaffinity="0" group="2" density="0"/>
+                  <body name="sca_shaft" pos="0.0091 0 0" quat="0.499998163397 -0.499999999997 -0.499999999997 -0.500001836603">
+                    <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                    <joint name="wrist_yaw" type="hinge" axis="0 0 1" range="-1.3963 1.3963" damping="2" armature="0.02" frictionloss="0.01"/>
+                    <geom name="sca_shaft_visual_0" type="mesh" mesh="mesh_11_tool_wrist_sca_shaft_link" material="psm_mat" pos="0 -0.0002 -0.0025" quat="1 0 0 0" contype="0" conaffinity="0" group="2" density="0"/>
+                    <body name="sca_ee_0" pos="0 0 0" quat="1 0 0 0">
+                      <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                      <joint name="jaw" type="hinge" axis="0 0 1" range="0 1.5707" damping="2" armature="0.02" frictionloss="0.01"/>
+                    </body>
+                    <body name="sca_ee_1" pos="0 0 0" quat="1 0 0 0">
+                      <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                      <joint name="jaw_mimic_1" type="hinge" axis="0 0 1" range="-1.5707 1.5707" damping="2" armature="0.02" frictionloss="0.01"/>
+                      <geom name="sca_ee_1_visual_0" type="mesh" mesh="mesh_12_tool_wrist_sca_link_2" material="psm_mat" pos="0 0 0" quat="1 0 0 0" contype="0" conaffinity="0" group="2" density="0"/>
+                    </body>
+                    <body name="sca_ee_2" pos="0 0 0" quat="1 0 0 0">
+                      <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                      <joint name="jaw_mimic_2" type="hinge" axis="0 0 1" range="-1.5707 1.5707" damping="2" armature="0.02" frictionloss="0.01"/>
+                      <geom name="sca_ee_2_visual_0" type="mesh" mesh="mesh_12_tool_wrist_sca_link_2" material="psm_mat" pos="0 0 0" quat="-0.00500365232585 -0 0.999987481653 -0" contype="0" conaffinity="0" group="2" density="0"/>
+                    </body>
+                    <body name="tool_tip" pos="0 0.0102 0" quat="0.5 -0.5 0.5 0.5">
+                      <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="outer_pitch_back" pos="0 0.0295 0.5185" quat="0.499998163397 -0.499999999997 -0.499999999997 -0.500001836603">
+          <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+          <joint name="pitch_1" type="hinge" axis="0 0 1" range="-3.141592653589793 3.141592653589793" damping="2" armature="0.02" frictionloss="0.01"/>
+          <geom name="outer_pitch_back_visual_0" type="mesh" mesh="mesh_2_outer_pitch_back" material="psm_mat" pos="0 0 0" quat="0.99081431434 0 0 -0.135229414325" contype="0" conaffinity="0" group="2" density="0"/>
+          <body name="outer_pitch_bottom" pos="0.04178 0.15007 -0.0137" quat="1 0 0 0">
+            <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+            <joint name="pitch_3" type="hinge" axis="0 0 1" range="-3.141592653589793 3.141592653589793" damping="2" armature="0.02" frictionloss="0.01"/>
+            <geom name="outer_pitch_bottom_visual_0" type="mesh" mesh="mesh_4_outer_pitch_bottom" material="psm_mat" pos="0.009 0 0" quat="0.707105482511 0 -0.707108079859 0" contype="0" conaffinity="0" group="2" density="0"/>
+            <body name="outer_insertion" pos="-0.520 0 -0.0155" quat="1 0 0 0">
+              <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+              <joint name="pitch_5" type="hinge" axis="0 0 1" range="-3.141592653589793 3.141592653589793" damping="2" armature="0.02" frictionloss="0.01"/>
+              <geom name="outer_insertion_visual_0" type="mesh" mesh="mesh_6_outer_insertion" material="psm_mat" pos="0.02528 0.429 0" quat="0.499998163397 0.500001836603 -0.499999999997 0.499999999997" contype="0" conaffinity="0" group="2" density="0"/>
+            </body>
+          </body>
+          <body name="outer_pitch_top" pos="0.04209 0.18695 -0.02412" quat="1 0 0 0">
+            <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+            <joint name="pitch_4" type="hinge" axis="0 0 1" range="-3.141592653589793 3.141592653589793" damping="2" armature="0.02" frictionloss="0.01"/>
+            <geom name="outer_pitch_top_visual_0" type="mesh" mesh="mesh_5_outer_pitch_top" material="psm_mat" pos="0.009 0 0" quat="0.707105482511 0 -0.707108079859 0" contype="0" conaffinity="0" group="2" density="0"/>
+          </body>
+        </body>
+        <body name="outer_pitch_front" pos="0 0.0295 0.4285" quat="0.499998163397 -0.499999999997 -0.499999999997 -0.500001836603">
+          <inertial pos="0 0 0" mass="0.02" diaginertia="0.0001 0.0001 0.0001"/>
+          <joint name="pitch_2" type="hinge" axis="0 0 1" range="-3.141592653589793 3.141592653589793" damping="2" armature="0.02" frictionloss="0.01"/>
+          <geom name="outer_pitch_front_visual_0" type="mesh" mesh="mesh_3_outer_pitch_front" material="psm_mat" pos="0 0 0" quat="0.99081431434 0 0 -0.135229414325" contype="0" conaffinity="0" group="2" density="0"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <equality>
+    <joint name="eq_pitch_1" joint1="pitch_1" joint2="pitch" polycoef="0 1 0 0 0" solref="0.005 1"/>
+    <joint name="eq_pitch_2" joint1="pitch_2" joint2="pitch" polycoef="0 1 0 0 0" solref="0.005 1"/>
+    <joint name="eq_pitch_3" joint1="pitch_3" joint2="pitch" polycoef="0 -1 0 0 0" solref="0.005 1"/>
+    <joint name="eq_pitch_4" joint1="pitch_4" joint2="pitch" polycoef="0 -1 0 0 0" solref="0.005 1"/>
+    <joint name="eq_pitch_5" joint1="pitch_5" joint2="pitch" polycoef="0 1 0 0 0" solref="0.005 1"/>
+    <joint name="eq_jaw_mimic_1" joint1="jaw_mimic_1" joint2="jaw" polycoef="0 0.5 0 0 0" solref="0.005 1"/>
+    <joint name="eq_jaw_mimic_2" joint1="jaw_mimic_2" joint2="jaw" polycoef="0 -0.5 0 0 0" solref="0.005 1"/>
+  </equality>
+
+  <actuator>
+    <position name="ctrl_yaw" joint="yaw" kp="60" ctrlrange="-1.5707 1.5707" forcelimited="true" forcerange="-80 80"/>
+    <position name="ctrl_pitch" joint="pitch" kp="60" ctrlrange="-0.7854 0.7854" forcelimited="true" forcerange="-80 80"/>
+    <position name="ctrl_insertion" joint="insertion" kp="400" ctrlrange="0 0.240" forcelimited="true" forcerange="-120 120"/>
+    <position name="ctrl_roll" joint="roll" kp="60" ctrlrange="-2.2689 2.2689" forcelimited="true" forcerange="-80 80"/>
+    <position name="ctrl_wrist_pitch" joint="wrist_pitch" kp="60" ctrlrange="-1.5707 1.5707" forcelimited="true" forcerange="-80 80"/>
+    <position name="ctrl_wrist_yaw" joint="wrist_yaw" kp="60" ctrlrange="-1.3963 1.3963" forcelimited="true" forcerange="-80 80"/>
+    <position name="ctrl_jaw" joint="jaw" kp="15" ctrlrange="0 1.5707" forcelimited="true" forcerange="-20 20"/>
+  </actuator>
+
+</mujoco>

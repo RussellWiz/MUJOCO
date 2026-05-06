@@ -1,0 +1,532 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="psm">
+    <mujoco><compiler autolimits="true" balanceinertia="true" inertiafromgeom="true" alignfree="true" saveinertial="true" discardvisual="false" boundmass="1e-8" boundinertia="1e-10" /></mujoco><material name="white">
+        <color rgba="0.95 0.95 0.95 1" />
+    </material>
+    <material name="yellow">
+        <color rgba="0.9843 0.8863 0.3176 1" />
+    </material>
+    <material name="orange">
+        <color rgba="1.00 0.77 0.03 1" />
+    </material>
+    <material name="grey">
+        <color rgba="0.80 0.80 0.80 1" />
+    </material>
+    <material name="silver">
+        <color rgba="0.8941 0.8941 0.8863 1" />
+    </material>
+    <material name="black">
+        <color rgba="0.0314 0.0314 0.0314 1" />
+    </material>
+    <material name="red_translucent">
+        <color rgba="1 0 0 0.5" />
+    </material>
+
+    
+
+    <link name="psm_base_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 -0.17016 -0.085607" />
+            <mass value="2.0161" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/base_link.STL" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    
+
+    <link name="psm_yaw_link">
+        <inertial>
+            
+            <origin rpy="0 0 0" xyz="-0.038769 0 0.527996" />
+            <mass value="1.4705" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            
+            <origin rpy="0 0 0" xyz="0 0 0.4864" />
+            <geometry>
+                <mesh filename="meshes/visual/yaw_link.STL" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_yaw_joint" type="revolute">
+        
+        <origin rpy="1.57079632679 -1.57079632679 0" xyz="0 0.4864 0" />
+        <parent link="psm_base_link" />
+        <child link="psm_yaw_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-1.5883" upper="1.5883" velocity="2.1" />
+    </joint>
+
+    <link name="psm_pitch_end_link">
+        <inertial>
+            
+            
+            <origin rpy="0 0 0" xyz="0.0442293 0.27985 0" />
+            <mass value="2.091" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            
+            
+            <origin rpy="0 0 3.14159265359" xyz="0.0423 0.14372 0" />
+            <geometry>
+                <mesh filename="meshes/visual/pitch_end_link.STL" />
+            </geometry>
+            <material name="yellow" />
+        </visual>
+        
+        
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_pitch_end_joint" type="revolute">
+        
+        <origin rpy="-1.57079632679 -1.57079632679 0" xyz="0 0 0" />
+        
+        <parent link="psm_yaw_link" />
+        <child link="psm_pitch_end_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-0.9251" upper="0.9251" velocity="2.1" />
+        <mimic joint="psm_pitch_back_joint" multiplier="1" />
+    </joint>
+
+    <link name="psm_main_insertion_link">
+        <inertial>
+            
+            <origin rpy="0 0 0" xyz="-0.00010934 -0.0040563 0.0098616" />
+            <mass value="0.22491" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/main_insertion_link_1.obj" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_main_insertion_joint" type="prismatic">
+        
+        
+        <origin rpy="1.57079632679 0 0" xyz="0 0.4318 0" />
+        <parent link="psm_pitch_end_link" />
+        <child link="psm_main_insertion_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="0" upper="0.24" velocity="1" />
+    </joint>
+
+   <link name="psm_tool_roll_link">
+       <inertial>
+           <origin rpy="0 0 0" xyz="0 0 -0.0058234" />
+           <mass value="0.00033225" />
+           <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+       </inertial>
+       <visual>
+           <origin rpy="0 3.14 0" xyz="0 0 -0.01" />
+           <geometry>
+               <mesh filename="meshes/visual/CDF_base_no_shaft.obj" scale="0.001 0.001 0.001" />
+           </geometry>
+           <material name="">
+               <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+           </material>
+       </visual>
+       <collision>
+           <origin rpy="0 3.14 0" xyz="0 0 -0.01" />
+           <geometry>
+               <mesh filename="meshes/collision/CDF_base_no_shaft.obj" scale="0.001 0.001 0.001" />
+           </geometry>
+       </collision>
+   </link>
+ 
+   <joint name="psm_tool_roll_joint" type="revolute">
+       
+       <origin rpy="0 0 0" xyz="0 0 0.4162" />
+       <parent link="psm_main_insertion_link" />
+       <child link="psm_tool_roll_link" />
+       <axis xyz="0 0 1" />
+       <limit effort="200" lower="-4.5379" upper="4.5379" velocity="2.1" />
+   </joint>
+ 
+   <link name="psm_tool_pitch_link">
+       <inertial>
+           <origin rpy="0 0 0" xyz="0.0035763 0 0" />
+           <mass value="0.00025784" />
+           <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+       </inertial>
+       <visual>
+           <origin rpy="-1.57 0 1.57" xyz="0  0.0  0" />
+           <geometry>
+               <mesh filename="meshes/visual/wrist.obj" scale="0.001 0.001 0.001" />
+           </geometry>
+           <material name="">
+               <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+           </material>
+       </visual>
+       <collision>
+           <origin rpy="-1.57 0 1.57" xyz="-0.01  0.0  0" /> 
+           <geometry>
+               <mesh filename="meshes/collision/wrist.obj" scale="0.001 0.001 0.001" />
+           </geometry>
+       </collision>
+   </link>
+ 
+   <joint name="psm_tool_pitch_joint" type="revolute">
+       
+       
+       <origin rpy="-1.57079632679 -1.57079632679 0" xyz="0 0 0" />
+       <parent link="psm_tool_roll_link" />
+       <child link="psm_tool_pitch_link" />
+       <axis xyz="0 0 1" />
+       <limit effort="200" lower="-1.3963" upper="1.3963" velocity="2.1" />
+   </joint>
+ 
+   <link name="psm_tool_yaw_link">
+       <inertial>
+           <origin rpy="0 0 0" xyz="0 0 0" />
+           
+           <mass value="0.1" />
+           <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+       </inertial>
+       
+       
+       
+       
+       
+       
+       
+   </link>
+ 
+   <joint name="psm_tool_yaw_joint" type="revolute">
+       
+       <origin rpy="-1.57079632679 -1.57079632679 0" xyz="0.0091 0 0" />
+       <parent link="psm_tool_pitch_link" />
+       <child link="psm_tool_yaw_link" />
+       <axis xyz="0 0 1" />
+       <limit effort="200" lower="-1.3963" upper="1.3963" velocity="21" />
+   </joint>
+ 
+   <link name="psm_tool_gripper1_link">
+       <contact>
+           <lateral_friction value="1.0" />
+           
+           <spinning_friction value="1.0" />
+       </contact>
+       <inertial>
+           <origin rpy="0 0 0" xyz="0.00019605 0.001435 -0.00088478" />
+           <mass value="2.02" />
+           <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+       </inertial>
+       <visual>
+           <origin rpy="0 0 0" xyz="0 0 0" />
+           
+           <geometry>
+               <mesh filename="meshes/visual/tool_gripper1_link_wide.obj" />
+               
+           </geometry>
+           <material name="">
+               <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+           </material>
+       </visual>
+       <collision>
+           
+           
+           <origin rpy="0 0 0" xyz="0.0007 0.0051 0" />
+           <geometry>
+               
+               <box size="0.0014 0.0102 0.0018" />
+           </geometry>
+       </collision>
+   </link>
+ 
+   <joint name="psm_tool_gripper1_joint" type="revolute">
+       <origin rpy="0 0 0" xyz="0 0 0" />
+       <parent link="psm_tool_yaw_link" />
+       <child link="psm_tool_gripper1_link" />
+       <axis xyz="0 0 1" />
+       <mimic joint="psm_tool_gripper2_joint" multiplier="-1" />
+       <limit effort="200" lower="-1" upper="1" velocity="2.1" />
+   </joint>
+ 
+   <link name="psm_tool_gripper2_link">
+       <contact>
+           <lateral_friction value="1.0" />
+           <spinning_friction value="1.0" />
+       </contact>
+       <inertial>
+           <origin rpy="0 0 0" xyz="-0.00019605 0.001435 0.00088478" />
+           <mass value="2.02" />
+           <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+       </inertial>
+       <visual>
+           <origin rpy="0 0 0" xyz="0 0 0" />
+           
+           <geometry>
+               <mesh filename="meshes/visual/tool_gripper2_link_wide.obj" />
+               
+           </geometry>
+           <material name="">
+               <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+           </material>
+       </visual>
+       <collision>
+           
+           
+           <origin rpy="0 0 0" xyz="-0.0007 0.0051 0" />
+           <geometry>
+               
+               <box size="0.0014 0.0102 0.0018" />
+           </geometry>
+       </collision>
+   </link>
+
+    <joint name="psm_tool_gripper2_joint" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="psm_tool_yaw_link" />
+        <child link="psm_tool_gripper2_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-1" upper="1" velocity="2.1" />
+    </joint>
+
+    
+    <link name="psm_tool_tip_link">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_tool_tip_joint" type="fixed">
+        <parent link="psm_tool_yaw_link" />
+        <child link="psm_tool_tip_link" />
+        <origin rpy="-1.57079632679 -1.57079632679 0" xyz="0 0.0102 0" />
+    </joint>
+
+    <link name="psm_pitch_back_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.011651 -0.036241 0" />
+            <mass value="0.98494" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/pitch_back_link.STL" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_pitch_back_joint" type="revolute">
+        
+        
+        <origin rpy="-1.57079632679 -0.29038632563 0" xyz="0 0 0.516" />
+        <parent link="psm_yaw_link" />
+        <child link="psm_pitch_back_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-0.93556" upper="0.94249" velocity="10" />
+    </joint>
+
+    <link name="psm_pitch_bottom_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.25683 -0.010348 0" />
+            <mass value="0.44569" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/pitch_bottom_link.STL" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_pitch_bottom_joint" type="revolute">
+        <origin rpy="0 0 1.86118265242" xyz="0.15 0 0" />
+        <parent link="psm_pitch_back_link" />
+        <child link="psm_pitch_bottom_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-0.94249" upper="0.93556" velocity="10" />
+        <mimic joint="psm_pitch_back_joint" multiplier="-1" />
+    </joint>
+
+    <link name="psm_pitch_top_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.31246 -0.00056566 0" />
+            <mass value="0.17841" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/pitch_top_link.STL" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_pitch_top_joint" type="revolute">
+        <origin rpy="0 0 1.86118265242" xyz="0.18366 0.014121 0" />
+        <parent link="psm_pitch_back_link" />
+        <child link="psm_pitch_top_link" />
+        <axis xyz="0 0 1" />
+        <limit effort="200" lower="-0.94249" upper="0.93556" velocity="10" />
+        <mimic joint="psm_pitch_back_joint" multiplier="-1" />
+    </joint>
+
+    <link name="psm_pitch_front_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.096269 0 0.047551" />
+            <mass value="0.074425" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/pitch_front_link.STL" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        
+        
+        
+        
+        
+        
+    </link>
+
+    <joint name="psm_pitch_front_joint" type="revolute">
+        
+        <origin rpy="-1.57079632679 -0.29038632563 0" xyz="0 0 0.42" />
+        <parent link="psm_yaw_link" />
+        <child link="psm_pitch_front_link" />
+        <axis xyz="0 0 1" />
+        <mimic joint="psm_pitch_back_joint" multiplier="1" />
+        <limit effort="200" lower="-0.93556" upper="0.94249" velocity="10" />
+    </joint>
+
+    <link name="psm_remote_center_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <mass value="0" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <geometry>
+                <sphere radius="0.015" />
+            </geometry>
+            <material name="red_translucent" />
+        </visual>
+    </link>
+
+    <joint name="psm_remote_center_joint" type="fixed">
+        <parent link="psm_base_link" />
+        <child link="psm_remote_center_link" />
+        <origin rpy="0 0 0" xyz="0 0.4864 0" />
+    </joint>
+    
+
+    <link name="psm_main_insertion_link_2">
+        
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <mass value="0" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/visual/main_insertion_link_2.obj" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="psm_main_insertion_joint_2" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="psm_main_insertion_link" />
+        <child link="psm_main_insertion_link_2" />
+    </joint>
+
+    <link name="psm_main_insertion_link_3">
+        
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <mass value="0" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -0.14" />
+            <geometry>
+                <mesh filename="meshes/visual/CDF_base.obj" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="psm_main_insertion_joint_3" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="psm_main_insertion_link" />
+        <child link="psm_main_insertion_link_3" />
+    </joint>
+</robot>

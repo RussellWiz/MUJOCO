@@ -1,0 +1,198 @@
+<mujoco model="panda scene with capsule32 decomposed torus">
+  <include file="panda.xml"/>
+
+  <statistic center="0.3 0 0.4" extent="1"/>
+  <option iterations="60" noslip_iterations="20"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="torus_mat" rgba="0.8 0.35 0.1 1" specular="0.5" shininess="0.5"/>
+
+    <mesh name="torus_visual" file="torus_capsule32_visual.obj"/>
+    <mesh name="torus_ch0" file="torus_capsule32_convex_0.obj"/>
+    <mesh name="torus_ch1" file="torus_capsule32_convex_1.obj"/>
+    <mesh name="torus_ch2" file="torus_capsule32_convex_2.obj"/>
+    <mesh name="torus_ch3" file="torus_capsule32_convex_3.obj"/>
+    <mesh name="torus_ch4" file="torus_capsule32_convex_4.obj"/>
+    <mesh name="torus_ch5" file="torus_capsule32_convex_5.obj"/>
+    <mesh name="torus_ch6" file="torus_capsule32_convex_6.obj"/>
+    <mesh name="torus_ch7" file="torus_capsule32_convex_7.obj"/>
+    <mesh name="torus_ch8" file="torus_capsule32_convex_8.obj"/>
+    <mesh name="torus_ch9" file="torus_capsule32_convex_9.obj"/>
+    <mesh name="torus_ch10" file="torus_capsule32_convex_10.obj"/>
+    <mesh name="torus_ch11" file="torus_capsule32_convex_11.obj"/>
+    <mesh name="torus_ch12" file="torus_capsule32_convex_12.obj"/>
+    <mesh name="torus_ch13" file="torus_capsule32_convex_13.obj"/>
+    <mesh name="torus_ch14" file="torus_capsule32_convex_14.obj"/>
+    <mesh name="torus_ch15" file="torus_capsule32_convex_15.obj"/>
+    <mesh name="torus_ch16" file="torus_capsule32_convex_16.obj"/>
+    <mesh name="torus_ch17" file="torus_capsule32_convex_17.obj"/>
+    <mesh name="torus_ch18" file="torus_capsule32_convex_18.obj"/>
+    <mesh name="torus_ch19" file="torus_capsule32_convex_19.obj"/>
+    <mesh name="torus_ch20" file="torus_capsule32_convex_20.obj"/>
+    <mesh name="torus_ch21" file="torus_capsule32_convex_21.obj"/>
+    <mesh name="torus_ch22" file="torus_capsule32_convex_22.obj"/>
+    <mesh name="torus_ch23" file="torus_capsule32_convex_23.obj"/>
+    <mesh name="torus_ch24" file="torus_capsule32_convex_24.obj"/>
+    <mesh name="torus_ch25" file="torus_capsule32_convex_25.obj"/>
+    <mesh name="torus_ch26" file="torus_capsule32_convex_26.obj"/>
+    <mesh name="torus_ch27" file="torus_capsule32_convex_27.obj"/>
+    <mesh name="torus_ch28" file="torus_capsule32_convex_28.obj"/>
+    <mesh name="torus_ch29" file="torus_capsule32_convex_29.obj"/>
+    <mesh name="torus_ch30" file="torus_capsule32_convex_30.obj"/>
+    <mesh name="torus_ch31" file="torus_capsule32_convex_31.obj"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"
+          solref="0.001 1" solimp="0.99 0.999 0.001" priority="1"/>
+
+    <!-- Derived from the 32-capsule torus, then split into convex sectors. -->
+    <body name="torus" pos="0.7 0 0.25">
+      <freejoint/>
+
+      <geom name="torus_visual" type="mesh" mesh="torus_visual" material="torus_mat"
+            contype="0" conaffinity="0" group="2" density="0"/>
+
+      <geom name="torus_col0" type="mesh" mesh="torus_ch0" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col1" type="mesh" mesh="torus_ch1" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col2" type="mesh" mesh="torus_ch2" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col3" type="mesh" mesh="torus_ch3" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col4" type="mesh" mesh="torus_ch4" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col5" type="mesh" mesh="torus_ch5" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col6" type="mesh" mesh="torus_ch6" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col7" type="mesh" mesh="torus_ch7" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col8" type="mesh" mesh="torus_ch8" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col9" type="mesh" mesh="torus_ch9" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col10" type="mesh" mesh="torus_ch10" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col11" type="mesh" mesh="torus_ch11" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col12" type="mesh" mesh="torus_ch12" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col13" type="mesh" mesh="torus_ch13" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col14" type="mesh" mesh="torus_ch14" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col15" type="mesh" mesh="torus_ch15" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col16" type="mesh" mesh="torus_ch16" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col17" type="mesh" mesh="torus_ch17" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col18" type="mesh" mesh="torus_ch18" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col19" type="mesh" mesh="torus_ch19" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col20" type="mesh" mesh="torus_ch20" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col21" type="mesh" mesh="torus_ch21" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col22" type="mesh" mesh="torus_ch22" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col23" type="mesh" mesh="torus_ch23" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col24" type="mesh" mesh="torus_ch24" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col25" type="mesh" mesh="torus_ch25" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col26" type="mesh" mesh="torus_ch26" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col27" type="mesh" mesh="torus_ch27" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col28" type="mesh" mesh="torus_ch28" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col29" type="mesh" mesh="torus_ch29" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col30" type="mesh" mesh="torus_ch30" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+      <geom name="torus_col31" type="mesh" mesh="torus_ch31" group="3"
+            contype="1" conaffinity="1" condim="4" friction="10 4 0.5"
+            solref="0.015 1" solimp="0.95 0.99 0.001 0.5 2"
+            margin="0.0003" mass="0.000375"/>
+    </body>
+  </worldbody>
+
+</mujoco>

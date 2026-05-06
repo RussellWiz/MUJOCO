@@ -1,0 +1,84 @@
+<mujoco model="panda scene with torus ring">
+  <include file="panda.xml"/>
+
+  <statistic center="0.3 0 0.4" extent="1"/>
+  <option iterations="60" noslip_iterations="30"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="torus_mat" rgba="0.8 0.3 0.1 1" specular="0.5" shininess="0.5"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"
+          solref="0.001 1" solimp="0.99 0.999 0.001" priority="1"/>
+
+    <!--
+      空心圆环：16 个 capsule 首尾相接排成圆环
+      主半径 R = 0.075 m (7.5 cm)，管半径 r = 0.016 m (1.6 cm)
+      圆环外径 ≈ 18.2 cm，内径 ≈ 11.8 cm，管径 3.2 cm（夹爪可夹）
+    -->
+    <body name="torus" pos="0.7 0 0.25">
+      <freejoint/>
+      <geom name="seg0"  type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.07500  0.00000 0  0.06929  0.02870 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg1"  type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.06929  0.02870 0  0.05303  0.05303 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg2"  type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.05303  0.05303 0  0.02870  0.06929 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg3"  type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.02870  0.06929 0  0.00000  0.07500 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg4"  type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.00000  0.07500 0 -0.02870  0.06929 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg5"  type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.02870  0.06929 0 -0.05303  0.05303 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg6"  type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.05303  0.05303 0 -0.06929  0.02870 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg7"  type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.06929  0.02870 0 -0.07500  0.00000 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg8"  type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.07500  0.00000 0 -0.06929 -0.02870 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg9"  type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.06929 -0.02870 0 -0.05303 -0.05303 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg10" type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.05303 -0.05303 0 -0.02870 -0.06929 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg11" type="capsule" size="0.016" material="torus_mat"
+            fromto="-0.02870 -0.06929 0  0.00000 -0.07500 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg12" type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.00000 -0.07500 0  0.02870 -0.06929 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg13" type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.02870 -0.06929 0  0.05303 -0.05303 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg14" type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.05303 -0.05303 0  0.06929 -0.02870 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+      <geom name="seg15" type="capsule" size="0.016" material="torus_mat"
+            fromto=" 0.06929 -0.02870 0  0.07500  0.00000 0"
+            condim="6" friction="10 4 0.5" solref="0.015 1" margin="0.002" mass="0.002"/>
+    </body>
+  </worldbody>
+
+</mujoco>

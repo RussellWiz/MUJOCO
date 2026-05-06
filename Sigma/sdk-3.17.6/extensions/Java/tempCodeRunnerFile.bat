@@ -1,0 +1,2 @@
+
+set "JAVA_EXE=%JAVA_HOM
