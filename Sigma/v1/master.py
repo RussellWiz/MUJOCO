@@ -8,7 +8,7 @@ import time
 
 import numpy as np
 
-from force_dimension_sdk import ForceDimensionSDK
+from .._shared import ForceDimensionSDK
 
 
 def keyboard_command() -> str | None:

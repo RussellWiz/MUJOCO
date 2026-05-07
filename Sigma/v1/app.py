@@ -10,17 +10,15 @@ import time
 import numpy as np
 
 V1_DIR = Path(__file__).resolve().parent
-SIGMA_DIR = V1_DIR.parent
-PROJECT_DIR = SIGMA_DIR.parent
 
 if __package__ in (None, ""):
-    for path in (str(V1_DIR), str(SIGMA_DIR), str(PROJECT_DIR)):
-        if path not in sys.path:
-            sys.path.insert(0, path)
-    from configs import parse_args
-    from master import SigmaMaster, gripper_to_jaw, keyboard_command
-    from motion import MotionController, make_calibration
-    from robot import PsmRobot, body_rotation, point_world_pos
+    project_dir = str(V1_DIR.parent.parent)
+    if project_dir not in sys.path:
+        sys.path.insert(0, project_dir)
+    from Sigma.v1.configs import parse_args
+    from Sigma.v1.master import SigmaMaster, gripper_to_jaw, keyboard_command
+    from Sigma.v1.motion import MotionController, make_calibration
+    from Sigma.v1.robot import PsmRobot, body_rotation, point_world_pos
 else:
     from .configs import parse_args
     from .master import SigmaMaster, gripper_to_jaw, keyboard_command
