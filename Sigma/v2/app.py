@@ -6,15 +6,14 @@ import sys
 import time
 
 V2_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = V2_DIR.parent.parent
 if __package__ in (None, ""):
-    for path in (str(V2_DIR), str(PROJECT_DIR), str(V2_DIR.parent)):
-        if path not in sys.path:
-            sys.path.insert(0, path)
-    from configs import parse_args
-    from master import SigmaMaster
-    from motion import SplitTeleopController
-    from robot import PsmRobot
+    project_dir = str(V2_DIR.parent.parent)
+    if project_dir not in sys.path:
+        sys.path.insert(0, project_dir)
+    from Sigma.v2.configs import parse_args
+    from Sigma.v2.master import SigmaMaster
+    from Sigma.v2.motion import SplitTeleopController
+    from Sigma.v2.robot import PsmRobot
 else:
     from .configs import parse_args
     from .master import SigmaMaster

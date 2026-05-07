@@ -2,23 +2,15 @@
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
+
+from .._shared import DEFAULT_PROFILE, TELEOP_CONFIGS
 
 
 V1_DIR = Path(__file__).resolve().parent
 SIGMA_DIR = V1_DIR.parent
 PROJECT_DIR = SIGMA_DIR.parent
 DEFAULT_XML = PROJECT_DIR / "Assest" / "psm_official" / "psm_control.xml"
-
-if str(SIGMA_DIR) not in sys.path:
-    sys.path.insert(0, str(SIGMA_DIR))
-
-try:
-    from config import DEFAULT_PROFILE, TELEOP_CONFIGS
-except ImportError:
-    DEFAULT_PROFILE = None
-    TELEOP_CONFIGS = {}
 
 # Default v1 strategy. Change this value in configs.py to switch the app's
 # normal behavior without changing the launch command.

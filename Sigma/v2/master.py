@@ -3,15 +3,8 @@ from __future__ import annotations
 
 import threading
 import time
-from pathlib import Path
-import sys
 
-V2_DIR = Path(__file__).resolve().parent
-SIGMA_DIR = V2_DIR.parent
-if str(SIGMA_DIR) not in sys.path:
-    sys.path.insert(0, str(SIGMA_DIR))
-
-from force_dimension_sdk import ForceDimensionSDK
+from .._shared import ForceDimensionSDK
 
 
 class SigmaMaster:

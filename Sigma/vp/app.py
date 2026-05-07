@@ -6,15 +6,14 @@ import sys
 import time
 
 VP_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = VP_DIR.parent.parent
 if __package__ in (None, ""):
-    for path in (str(VP_DIR), str(PROJECT_DIR), str(VP_DIR.parent)):
-        if path not in sys.path:
-            sys.path.insert(0, path)
-    from configs import parse_args
-    from master import SigmaMaster
-    from motion import PyBulletSplitController
-    from robot import PyBulletPsmRobot
+    project_dir = str(VP_DIR.parent.parent)
+    if project_dir not in sys.path:
+        sys.path.insert(0, project_dir)
+    from Sigma.vp.configs import parse_args
+    from Sigma.vp.master import SigmaMaster
+    from Sigma.vp.motion import PyBulletSplitController
+    from Sigma.vp.robot import PyBulletPsmRobot
 else:
     from .configs import parse_args
     from .master import SigmaMaster
@@ -108,4 +107,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

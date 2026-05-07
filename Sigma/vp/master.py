@@ -1,17 +1,10 @@
 """sigma.7 master-device wrapper for the PyBullet controller."""
 from __future__ import annotations
 
-import sys
 import threading
 import time
-from pathlib import Path
 
-VP_DIR = Path(__file__).resolve().parent
-SIGMA_DIR = VP_DIR.parent
-if str(SIGMA_DIR) not in sys.path:
-    sys.path.insert(0, str(SIGMA_DIR))
-
-from force_dimension_sdk import ForceDimensionSDK
+from .._shared import ForceDimensionSDK
 
 
 class SigmaMaster:
@@ -97,4 +90,3 @@ class SigmaMaster:
                 time.sleep(remaining)
             else:
                 next_tick = time.perf_counter()
-
